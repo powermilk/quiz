@@ -9,6 +9,8 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.Objects;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringRunner.class)
@@ -31,7 +33,7 @@ public class QuestionRepositoryTest {
     @Test
     public void shouldReturnAllEntities() {
         Question question1 = new Question(TestEntities.questionContent1, TestEntities.answerMap1);
-        Question question2 = new Question(TestEntities.questionContent1, TestEntities.answerMap1);
+        Question question2 = new Question(TestEntities.questionContent2, TestEntities.answerMap2);
 
         entityManager.persist(question1);
         entityManager.persist(question2);
@@ -44,7 +46,7 @@ public class QuestionRepositoryTest {
     @Test
     public void shouldFindQuestionById() {
         Question question1 = new Question(TestEntities.questionContent1, TestEntities.answerMap1);
-        Question question2 = new Question(TestEntities.questionContent1, TestEntities.answerMap1);
+        Question question2 = new Question(TestEntities.questionContent2, TestEntities.answerMap2);
 
         entityManager.persist(question1);
         entityManager.persist(question2);
@@ -52,6 +54,31 @@ public class QuestionRepositoryTest {
         Question result = repository.findById(question1.getId()).orElse(null);
 
         assertThat(result).isEqualTo(question1);
+    }
+
+    @Test
+    public void shouldUpdateQuestion() {
+        Question question1 = new Question(TestEntities.questionContent1, TestEntities.answerMap1);
+        Question question2 = new Question(TestEntities.questionContent2, TestEntities.answerMap2);
+
+        entityManager.persist(question1);
+
+        Question result = repository.findById(question1.getId()).orElse(null);
+        Objects.requireNonNull(result).setQuestionContent(question2.getQuestionContent());
+        result.setAnswerOptions(question2.getAnswerOptions());
+
+        assertThat(result.getId()).isEqualTo(question1.getId());
+        assertThat(result.getQuestionContent()).isEqualTo(question2.getQuestionContent());
+        assertThat(result.getAnswerOptions()).isEqualTo(question2.getAnswerOptions());
+    }
+
+    @Test
+    public void shouldNotFoundQuestion() {
+        Question question1 = new Question(1L, TestEntities.questionContent1, TestEntities.answerMap1);
+
+        Question result = repository.findById(question1.getId()).orElse(null);
+
+        assertThat(result).isEqualTo(null);
     }
 
     @Test

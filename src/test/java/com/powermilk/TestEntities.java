@@ -11,7 +11,7 @@ public class TestEntities {
     private static final BooleanWrapper incorrectAnwser = new BooleanWrapper(false);
 
     public static final String questionContent1 = "Which city is capital of Norway?";
-    private static final String questionContent2 = "Name a seventh planet from Sun";
+    public static final String questionContent2 = "Name a seventh planet from Sun";
 
     public static final String question1answer1 = "Bergen";
     public static final String question1answer2 = "Oslo";
@@ -31,7 +31,7 @@ public class TestEntities {
             put(question1answer4, incorrectAnwser);
         }
     };
-    private static final Map<String, BooleanWrapper> answerMap2 = new HashMap<String, BooleanWrapper>() {
+    public static final Map<String, BooleanWrapper> answerMap2 = new HashMap<String, BooleanWrapper>() {
         {
             put(question2answer1, incorrectAnwser);
             put(question2answer2, incorrectAnwser);
