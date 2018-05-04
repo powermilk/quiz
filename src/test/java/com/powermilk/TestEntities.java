@@ -13,8 +13,8 @@ public class TestEntities {
     public static final String questionContent1 = "Which city is capital of Norway?";
     private static final String questionContent2 = "Name a seventh planet from Sun";
 
-    private static final String question1answer1 = "Bergen";
-    private static final String question1answer2 = "Oslo";
+    public static final String question1answer1 = "Bergen";
+    public static final String question1answer2 = "Oslo";
     private static final String question1answer3 = "Arendal";
     private static final String question1answer4 = "Stavanger";
 
