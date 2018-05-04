@@ -8,13 +8,13 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.PropertySource;
 
 @ComponentScan(basePackageClasses = {
-		CorrectQuestionValidatorService.class,
+        CorrectQuestionValidatorService.class,
 })
 @SpringBootApplication
 @EnableAutoConfiguration
 @PropertySource("application.properties")
 public class QuizApplication {
-	public static void main(String[] args) {
-		SpringApplication.run(QuizApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(QuizApplication.class, args);
+    }
 }
