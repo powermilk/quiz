@@ -23,6 +23,12 @@ public class Question implements Serializable {
     public Question() {
     }
 
+    public Question(Long id, @NotBlank String questionContent, Map<String, BooleanWrapper> answerOptions) {
+        this.id = id;
+        this.questionContent = questionContent;
+        this.answerOptions = answerOptions;
+    }
+
     public Question(@NotBlank String questionContent, Map<String, BooleanWrapper> answerOptions) {
         this.questionContent = questionContent;
         this.answerOptions = answerOptions;

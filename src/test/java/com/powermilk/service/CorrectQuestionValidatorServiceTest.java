@@ -1,7 +1,7 @@
 package com.powermilk.service;
 
+import com.powermilk.QuizApplication;
 import com.powermilk.TestEntities;
-import com.powermilk.configuration.TestConfiguration;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +12,7 @@ import static junit.framework.Assert.assertFalse;
 import static junit.framework.TestCase.assertTrue;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = TestConfiguration.class)
+@SpringBootTest(classes = QuizApplication.class)
 public class CorrectQuestionValidatorServiceTest {
 
     @Autowired
