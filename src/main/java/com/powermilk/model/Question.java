@@ -15,11 +15,18 @@ public class Question implements Serializable {
     private Long id;
     @NotBlank
     private String questionContent;
-    @NotBlank
     @ElementCollection
     @CollectionTable(name = "answer_map", joinColumns = @JoinColumn(name = "id"))
-    @MapKeyColumn(name="answer_content")
+    @MapKeyColumn(name = "answer_content")
     private Map<String, BooleanWrapper> answerOptions;
+
+    public Question() {
+    }
+
+    public Question(@NotBlank String questionContent, Map<String, BooleanWrapper> answerOptions) {
+        this.questionContent = questionContent;
+        this.answerOptions = answerOptions;
+    }
 
     public Long getId() {
         return id;
