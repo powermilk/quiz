@@ -3,8 +3,7 @@ package com.powermilk;
 import com.powermilk.model.BooleanWrapper;
 import com.powermilk.model.Question;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class TestEntities {
     private static final BooleanWrapper correctAnwser = new BooleanWrapper(true);
@@ -42,4 +41,8 @@ public class TestEntities {
 
     public static final Question question1 = new Question(questionContent1, answerMap1);
     public static final Question question2 = new Question(questionContent2, answerMap2);
+
+    public static final Question questionWithId1 = new Question(1L, questionContent1, answerMap1);
+
+    public static final List<Question> question_List = new ArrayList<>(Arrays.asList(question1, question2));
 }
