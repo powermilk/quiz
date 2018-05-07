@@ -6,10 +6,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.RequestAttributes;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import org.springframework.web.util.UriComponents;
 
 import javax.validation.Valid;
+import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 
@@ -38,11 +41,16 @@ class QuestionController {
 
         repository.save(question);
 
-        final UriComponents location = ServletUriComponentsBuilder.fromCurrentRequest()
-                .path("/v1/api/questions/{id}")
-                .buildAndExpand(question.getId());
+        URI location = URI.create("");
 
-        return ResponseEntity.created(location.toUri()).body(question);
+        RequestAttributes attrs = RequestContextHolder.getRequestAttributes();
+        if (attrs instanceof ServletRequestAttributes) {
+            location = ServletUriComponentsBuilder.fromCurrentRequest()
+                    .path("/v1/api/questions/{id}")
+                    .buildAndExpand(question.getId()).toUri();
+        }
+
+        return ResponseEntity.created(location).body(question);
     }
 
     @PutMapping("/questions/{id}")
