@@ -1,6 +1,5 @@
 package com.powermilk.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.powermilk.TestEntities;
 import com.powermilk.model.Question;
 import com.powermilk.repository.QuestionRepository;
@@ -10,7 +9,6 @@ import org.junit.runner.RunWith;
 import org.mockito.*;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.json.JacksonTester;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.TestPropertySource;
 
@@ -51,20 +49,19 @@ public class QuestionControllerTest {
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-        JacksonTester.initFields(this, new ObjectMapper());
     }
 
     @Test
-    public void shouldGetAllQuestions() {
-        Mockito.when(repository.findAll()).thenReturn(TestEntities.question_List);
+    public void shouldFindAllQuestions() {
+        Mockito.when(repository.findAll()).thenReturn(TestEntities.questions_list);
         final List<Question> questionList = controller.getAllQuestions();
         Mockito.verify(repository).findAll();
-        assertEquals(TestEntities.question_List.size(), questionList.size());
-        assertTrue(sameElements(TestEntities.question_List, questionList));
+        assertEquals(TestEntities.questions_list.size(), questionList.size());
+        assertTrue(sameElements(TestEntities.questions_list, questionList));
     }
 
     @Test
-    public void shouldGetAllQuestionsEmpty() {
+    public void shouldFindAllQuestionsWhenGivenEmptyList() {
         final List<Question> emptyList = new ArrayList<>();
 
         Mockito.when(repository.findAll()).thenReturn(emptyList);
@@ -77,7 +74,7 @@ public class QuestionControllerTest {
     }
 
     @Test
-    public void shouldGetOnlyOneQuestionById() {
+    public void shouldFindOnlyOneQuestionById() {
         Mockito.when(repository.findById(ArgumentMatchers.anyLong())).thenReturn(
                 Optional.of(TestEntities.question1)
         );
@@ -87,7 +84,7 @@ public class QuestionControllerTest {
     }
 
     @Test
-    public void shouldReturnNotFoundForEmptyQuestionById() {
+    public void shouldReturnNotFoundQuestionWhenGivenIncorrectId() {
         Mockito.when(repository.findById(ArgumentMatchers.anyLong())).thenReturn(Optional.empty());
 
         final ResponseEntity<Question> actual = controller.getQuestionById(1L);
@@ -97,13 +94,10 @@ public class QuestionControllerTest {
 
     @Test
     public void shouldDeleteQuestion() {
-        Mockito.when(repository.findById(ArgumentMatchers.anyLong())).thenReturn(
-                Optional.of(TestEntities.questionWithId1)
-        );
+        Mockito.when(repository.findById(ArgumentMatchers.anyLong()))
+                .thenReturn(Optional.of(TestEntities.questionWithId1));
 
-        Mockito.doNothing().when(repository).delete(
-                TestEntities.questionWithId1
-        );
+        Mockito.doNothing().when(repository).delete(TestEntities.questionWithId1);
 
         ResponseEntity<Question> actual = controller.deleteQuestion(1L);
 
@@ -112,7 +106,7 @@ public class QuestionControllerTest {
     }
 
     @Test
-    public void shouldNotDeleteQuestionWhenGivenEmpty() {
+    public void shouldNotDeleteQuestionWhenGivenIncorrectId() {
         Mockito.when(repository.findById(ArgumentMatchers.anyLong())).thenReturn(Optional.empty());
         ResponseEntity<Question> actual = controller.deleteQuestion(1L);
 
@@ -121,27 +115,30 @@ public class QuestionControllerTest {
 
     @Test
     public void shouldSaveQuestion() {
-        Mockito.when(repository.save(TestEntities.question1)).thenReturn(TestEntities.question1);
-        Question actual = controller.createQuestion(TestEntities.question1);
-        Mockito.verify(repository).save(TestEntities.question1);
+        Mockito.when(repository.existsById(ArgumentMatchers.anyLong())).thenReturn(false);
+        Mockito.when(repository.save(TestEntities.questionWithId1)).thenReturn(TestEntities.questionWithId1);
 
-        assertEquals(repository.save(TestEntities.question1), actual);
+        controller.createQuestion(TestEntities.questionWithId1);
+
+        Mockito.verify(repository).existsById(1L);
+        Mockito.verify(repository).save(TestEntities.questionWithId1);
     }
 
     @Test
     public void shouldUpdateQuestion() {
-        Mockito.when(repository.findById(ArgumentMatchers.anyLong())).thenReturn(
-                Optional.of(TestEntities.question1)
-        );
+        Mockito.when(repository.findById(ArgumentMatchers.anyLong()))
+                .thenReturn(Optional.of(TestEntities.questionWithId1));
 
         ResponseEntity<Question> actual = controller.updateQuestion(1L, TestEntities.question2);
+
         Mockito.verify(repository).findById(1L);
+        Mockito.verify(repository).save(TestEntities.questionWithId1);
 
         assertEquals(ResponseEntity.ok().build(), actual);
     }
 
     @Test
-    public void shouldNotUpdateQuestionWhenGivenEmpty() {
+    public void shouldNotUpdateQuestionWhenGivenIncorrectId() {
         Mockito.when(repository.findById(ArgumentMatchers.anyLong())).thenReturn(Optional.empty());
 
         ResponseEntity<Question> actual = controller.updateQuestion(1L, TestEntities.question2);

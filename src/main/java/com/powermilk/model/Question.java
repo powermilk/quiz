@@ -1,5 +1,8 @@
 package com.powermilk.model;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
@@ -56,5 +59,42 @@ public class Question implements Serializable {
 
     public void setAnswerOptions(Map<String, BooleanWrapper> answerOptions) {
         this.answerOptions = answerOptions;
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder()
+                .append(id)
+                .append(questionContent)
+                .append(answerOptions)
+                .build();
+    }
+
+    @org.jetbrains.annotations.Contract(value = "null -> false", pure = true)
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) {
+            return true;
+        }
+
+        if (obj == null) {
+            return false;
+        }
+
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+
+        final Question question = (Question) obj;
+        return new EqualsBuilder()
+                .append(this.id, question.id)
+                .append(this.questionContent, question.questionContent)
+                .append(this.answerOptions, question.answerOptions)
+                .build();
+    }
+
+    @Override
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this);
     }
 }
